@@ -1,0 +1,419 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+            background: linear-gradient(aquamarine, gray);
+        }
+
+        #BigBall {
+            width: 80px;
+            height: 80px;
+            border-radius: 500px;
+            position: absolute;
+        }
+
+        #SmallBall {
+            width: 40px;
+            height: 40px;
+            background-color: blue;
+            border: 1px solid black;
+            border-radius: 500px;
+            position: absolute;
+            background-image: url("data:image/jpeg;base64,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");
+            background-size: cover;
+        }
+
+        #Line {
+            background: linear-gradient(blue, red 50%);
+            width: 10px;
+            height: 200%;
+            position: relative;
+            left: 40%;
+            top: 100%;
+        }
+
+        #BigBallShow {
+            width: 79px;
+            height: 79px;
+            background-color: red;
+            border: 1px solid black;
+            border-radius: 500px;
+            position: absolute;
+            z-index: 3;
+            background-image: url("https://cdn10.bigcommerce.com/s-npe4l/products/1158/images/1331/B-MZ-MAD---HIGH__43433.1477602944.1280.1280.jpg?c=2");
+            background-size: cover;
+        }
+
+        footer {
+            width: 100%;
+            height: 10%;
+            border: 1px solid black;
+            position: relative;
+            top: 90%;
+        }
+
+        footer>button:first-child {
+            position: absolute;
+            left: 0%;
+            height: 100%;
+            width: 50%;
+            font-size: 200%;
+            user-select: none;
+        }
+
+        footer>button:last-child {
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            width: 50%;
+            font-size: 200%;
+            user-select: none;
+        }
+
+        h1 {
+            position: absolute;
+            top: 10%;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: white;
+            position: absolute;
+        }
+
+        audio {
+            position: absolute;
+            margin-left: 10%;
+        }
+
+        #MuteGameMusic {
+            width: 50px;
+            height: 50px;
+            background-size: cover;
+            font-size: x-large;
+        }
+
+        #GameOverGUI {
+            width: 100%;
+            position: absolute;
+            z-index: 10;
+            height: 100%;
+            background-color: red;
+        }
+
+        #GameOverGUI>form>button {
+            font-size: 300%;
+            border: 5px solid black;
+            margin-left: 43%;
+        }
+
+        h2 {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="GameOverGUI">
+        <h2 style="text-align: center; font-size: 500%;">Game Over</h2>
+        <form action="">
+            <button type="submit">Restart</button>
+        </form>
+    </div>
+    <button id="MuteGameMusic" onclick="MuteMusicBTNClicked()">🔊</button>
+    <audio id="PopSound">
+        <source src="http://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3" type="audio/mpeg">
+        <source
+            src="https://cdn.filesend.jp/private/s8dQzacI22EiwRsaPoJ0zKND9CmQZEWnc_23fxkBiegWuGjGlgYWfaIMa1woFKrB/pop.mp3"
+            type="audio/mpeg">
+    </audio>
+    <audio id="GamePlaySound" autoplay loop>
+        <source
+            src="http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"
+            type="audio/mpeg">
+        <source
+            src="https://cdn.filesend.jp/private/NVdvyRGmh-_4sgcOP1TEfJdGlI3y978YtFEsLrtV1LXRFeV7YqC78tnQQpuIij5a/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"
+            type="audio/mpeg">
+    </audio>
+    <audio id="GameOverSound">
+        <source src="http://commondatastorage.googleapis.com/codeskulptor-assets/jump.ogg" type="audio/ogg">
+        <source
+            src="https://cdn.filesend.jp/private/EgcJDXftJUNrZOVQ85TIXB5gyNXyGaK1hShhukwCMfexyx_ldUFj5gYlBEm3XJZI/jump.ogg"
+            type="audio/ogg">
+    </audio>
+    <h1>Score: 0</h1>
+    <div id="BigBall">
+        <div id="BigBallShow"></div>
+        <div id="SmallBall">
+            <div id="Line"></div>
+        </div>
+    </div>
+    <footer>
+        <button id="LeftArrowBTN" onmouseup="RotateDir = 'none'; " onmousedown="MoveEvent('left')">◀◀◀</button>
+        <button id="RightArrowBTN" onmouseup="RotateDir = 'none'; " onmousedown="MoveEvent('right')">▶▶▶</button>
+    </footer>
+</body>
+<script>
+    document.getElementById("GameOverGUI").style.display = "none";
+    var MuteMusicBTN = document.getElementById("MuteGameMusic");
+    var GameAudio = document.getElementById("GamePlaySound");
+    var SmallBallDownUpSpeed = -1, Rotate = 0, RotateDir = "none", score = 0, SpawnDelay = 2000;
+    var BigBall = document.getElementById("BigBall");
+    BigBall.style.left = "43%"
+    BigBall.style.top = "39%";
+    var SmallBall = document.getElementById("SmallBall");
+    SmallBall.style.left = "25%";
+    SmallBall.style.top = "-125%";
+    var EmojiList = [
+        'url("https://dbdzm869oupei.cloudfront.net/img/sticker/preview/20084.png")',
+        'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZNe_iB4KACR6pEYUl97SEd1hrG_x3SX_On48tVxoQW4R0HXvNzaxlNb2LG6mcxvFYsU&usqp=CAU")',
+        'url("https://www.nicepng.com/png/detail/845-8451416_drunk-emoji-png-icon-woozy-face-emoji.png")',
+        'url("https://i.pinimg.com/originals/29/3b/84/293b84f3561f0f895b54554ff195ea1a.png")',
+        'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/800px-Twemoji_1f600.svg.png")',
+        'url("https://icon2.cleanpng.com/20180415/tee/kisspng-smirk-emoji-discord-smile-emoticon-emoji-5ad3ab3400c3d4.8096046115238213640031.jpg")',
+        'url("https://www.pinclipart.com/picdir/middle/524-5244817_download-free-png-emoji-png-download-transparent-emoji.png")',
+        'url("https://cdn4.vectorstock.com/i/1000x1000/54/18/kiss-female-emoticon-vector-27155418.jpg")',
+        'url("https://cpng.pikpng.com/pngl/s/315-3152893_eye-roll-eyes-emoji-background-images-rolls-wraps.png")',
+        'url("https://www.pngfind.com/pngs/m/317-3175660_emoji-transparent-background-image-cold-emoji-hd-png.png")',
+        'url("https://dbdzm869oupei.cloudfront.net/img/sticker/preview/20084.png")',
+        'url("https://banner2.cleanpng.com/20180811/ybe/kisspng-emoji-smiley-emoticon-face-nomouth-mouthless-speechless-emoji-emoticon-face-e-5b6f30e690ddb5.7887824815340136705934.jpg")',
+        'url("https://c8.alamy.com/comp/2GG8DFR/expresionless-emoji-illustration-vector-on-a-white-background-2GG8DFR.jpg")',
+        'url("https://www.pngkey.com/png/full/126-1269572_emoji-.png")',
+        'url("https://assets.stickpng.com/images/580b57fcd9996e24bc43c39c.png")',
+        'url("https://www.pngall.com/wp-content/uploads/2016/06/Angel-Blushing-Smile-Emoji-PNG.png")',
+        'url("https://img.favpng.com/0/25/24/face-with-tears-of-joy-emoji-crying-laughter-sticker-png-favpng-gxKCtgzxBTVc3b4cdSe49qkJd_t.jpg")',
+        'url("https://www.freeiconspng.com/thumbs/emoticons-whatsapp/emoticons-whatsapp-zzz-png-hd-7.png")',
+        'url("https://www.seekpng.com/png/detail/153-1537043_meme-emoji-discord-emoji-png-dank-discord-emoji.png")',
+        'url("https://www.emojiall.com/en/header-svg/%F0%9F%98%90%EF%B8%8E.png")',
+        'url("https://www.pngfind.com/pngs/m/681-6810973_iphone-emojis-new-hd-png-download.png")',
+        'url("https://assets.stickpng.com/thumbs/586295b33796e30ac4468738.png")',
+        'url("https://www.pngkey.com/png/detail/11-118359_download-iphone-emoji-jpgs-ios-10-png-emoji.png")',
+        'url("https://i.pinimg.com/originals/24/91/94/24919411b5ae2154535974296e393b03.jpg")',
+        'url("https://freepngimg.com/thumb/emoji/64995-icons-computer-iphone-emoji-download-hq-png-thumb.png")',
+        'url("https://i.pinimg.com/originals/fb/98/45/fb9845373df9aae4adfbeefbaff0cedb.png")',
+        'url("https://www.seekpng.com/png/detail/771-7710116_emoji-sticker-iphone-emojis.png")',
+        'url("https://i.pinimg.com/originals/3d/bf/41/3dbf412e29017a1c525d55442c5a0ffe.jpg")',
+        'url("https://i.pinimg.com/originals/16/58/9a/16589aff4cbb7e20c15760dfb02ea2b5.jpg")',
+        'url("https://c8.alamy.com/comp/2GG86HX/expresionless-emoji-illustration-on-a-white-background-2GG86HX.jpg")',
+        'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWI5vhviUFkvNSWNKq9z7fJ3fshFGbhXShdw&usqp=CAU")',
+        'url("https://i1.pnghost.com/6/3/22/pngdb-sunglasses-emoji-emojipedia-snapchat-sticker-iphone-png-pqVYCj8naeGXn0km7dD5T9SKp_t.jpg")',
+        'url("https://png.pngitem.com/pimgs/s/90-906475_apple-emojis-png-transparent-smiley-emoji-png-png.png")',
+        'url("https://pngfree.io/upload/cache/upload/imgs/homepngwing/free-png-zcbht-f350x390.png")',
+        'url("https://i.pinimg.com/736x/4f/23/21/4f23210bda3aa2f6fbc8759a4af3b982.jpg")',
+        'url("https://www.pngkey.com/png/full/382-3820411_facebook-dialog-peach-ios-emoji.png")',
+        'url("https://library.kissclipart.com/20180828/ixq/kissclipart-nervous-emoticon-clipart-smiley-emoticon-clip-art-58b6ece78a27faca.png")',
+        'url("https://media.baamboozle.com/uploads/images/98925/1622219004_23588.png")'
+    ];
+
+
+    document.getElementsByTagName("body")[0].addEventListener("keydown", function (e) {
+        if (e.code == "KeyD" || e.key == "ArrowRight") {
+            RotateDir = "right"
+        } else if (e.code == "KeyA" || e.key == "ArrowLeft") {
+            RotateDir = "left";
+        }
+    })
+    document.getElementsByTagName("body")[0].addEventListener("keyup", function (e) {
+        if (e.code == "KeyA" || e.key == "ArrowRight" || e.code == "KeyD" || e.key == "ArrowLeft") {
+            RotateDir = "none"
+        }
+    })
+
+    document.getElementById("LeftArrowBTN").addEventListener("touchstart", function () {
+        RotateDir = "left";
+    })
+    document.getElementById("LeftArrowBTN").addEventListener("touchend", function () {
+        RotateDir = "none";
+    })
+    document.getElementById("RightArrowBTN").addEventListener("touchstart", function () {
+        RotateDir = "right";
+    })
+    document.getElementById("RightArrowBTN").addEventListener("touchend", function () {
+        RotateDir = "none";
+    })
+
+    function MuteMusicBTNClicked() {
+        if (GameAudio.muted) {
+            MuteMusicBTN.innerHTML = "🔊";
+            GameAudio.muted = false;
+        }
+        else {
+            MuteMusicBTN.innerHTML = "🔈";
+            GameAudio.muted = true;
+        }
+    }
+
+    function LineRenderer() {
+        document.getElementById("Line").style.height = getDistanceBetweenElements(
+            BigBall,
+            SmallBall
+        ) + "px";
+
+    }
+
+
+    function SpawnBalls() {
+        let newBall = document.createElement("div");
+        let Top = getRndInteger(30, 51);
+        let Left;
+        if (getRndInteger(0, 2) == 0) {
+            Left = getRndInteger(20, 90);
+            if (Left < 50)
+                Top = getRndInteger(25, 33);
+            Left = parseInt(window.getComputedStyle(BigBall).left) + Left;
+        }
+        else {
+            Left = getRndInteger(10, -60);
+            if (Left > -20)
+                Top = getRndInteger(48, 57);
+            Left = parseInt(window.getComputedStyle(BigBall).left) + Left;
+        }
+        newBall.style.width = "40px";
+        newBall.style.height = "40px";
+        newBall.style.borderRadius = "500px";
+        newBall.style.border = "1px solid black";
+        newBall.style.backgroundColor = "green";
+        newBall.style.position = "absolute";
+        newBall.style.transition = "Left 2s , Top 2s";
+        newBall.style.backgroundImage = '';
+        let RandomImageIndex = getRndInteger(0, EmojiList.length);
+        newBall.style.backgroundImage = EmojiList[RandomImageIndex];
+        newBall.style.backgroundSize = "cover";
+        newBall.style.top = parseInt(window.getComputedStyle(BigBall).top) + 19;
+        newBall.style.left = parseInt(window.getComputedStyle(BigBall).left) + 19;
+        newBall.style.zIndex = "-1";
+        newBall.setAttribute("class", "Balls")
+        document.getElementsByTagName("body")[0].appendChild(newBall);
+        setTimeout(function () {
+            newBall.style.top = Top + "%";
+            newBall.style.left = Left + "px";
+        }, 100)
+        clearInterval(SI3);
+        SI3 = setInterval(SpawnBalls, SpawnDelay);
+    }
+    //    
+    //Game Over in this function
+    function MoveDownUpSmallBall() {
+        if (ConvertPosToInt(SmallBall.style.top) < (window.innerHeight / 2.4) * -1)
+            SmallBallDownUpSpeed = Math.abs(SmallBallDownUpSpeed);
+        if (ConvertPosToInt(SmallBall.style.top) > -45) {
+            clearInterval(SI1);
+            clearInterval(SI2);
+            clearInterval(SI3);
+            document.getElementById("RightArrowBTN").style.backgroundColor = "white";
+            document.getElementById("LeftArrowBTN").style.backgroundColor = "white";
+            document.getElementById("GameOverGUI").style.display = "block";
+            GameAudio.muted = true;
+            document.getElementById("GameOverSound").play();
+            document.getElementsByTagName("h2")[0].innerHTML = "Game Over </br> Your Final Score: " + score;
+            SmallBall.style.backgroundImage = 'url("https://w7.pngwing.com/pngs/608/291/png-transparent-smiley-death-emoticon-dead-miscellaneous-face-dead.png")';
+        }
+        SmallBall.style.top = (ConvertPosToInt(SmallBall.style.top) + SmallBallDownUpSpeed) + "%";
+    }
+
+
+    function MoveEvent(dir) {
+        if (dir == "left")
+            RotateDir = "left";
+        else if (dir == "right")
+            RotateDir = "right";
+        else
+            RotateDir = "none";
+    }
+
+    function ConvertPosToInt(par) {
+        let pos = "";
+        let p = par;
+        for (i = 0; i < p.length - 1; i++) {
+            pos += p[i];
+        }
+        pos = parseInt(pos);
+        return pos;
+    }
+
+    function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function getPositionAtCenter(element) {
+        const { top, left, width, height } = element.getBoundingClientRect();
+        return {
+            x: left + width / 2,
+            y: top + height / 2
+        };
+    }
+
+    function getDistanceBetweenElements(a, b) {
+        const aPosition = getPositionAtCenter(a);
+        const bPosition = getPositionAtCenter(b);
+
+        return Math.hypot(aPosition.x - bPosition.x, aPosition.y - bPosition.y);
+    }
+
+    function AntiZeroBalls() {
+        if (document.getElementsByClassName("balls").length <= 1) {
+            SpawnBalls();
+            SpawnBalls();
+            SpawnBalls();
+        }
+    }
+    function BallsCollider() {
+        let Balls = document.getElementsByClassName("Balls");
+        for (let i = 0; i < Balls.length; i++) {
+            if (getDistanceBetweenElements(SmallBall, Balls[i]) < 39) {
+                SmallBallDownUpSpeed = Math.abs(SmallBallDownUpSpeed) * -1;
+                SmallBall.style.backgroundImage = Balls[i].style.backgroundImage;
+                Balls[i].remove();
+                score++;
+                document.getElementsByTagName("h1")[0].innerHTML = "Score: " + score;
+                document.getElementById("PopSound").play();
+            }
+        }
+    }
+
+    var SI4 = setInterval(function () { GameAudio.play(); }, 500);
+    var SI2 = setInterval(function () {
+        if (RotateDir == "left") {
+            Rotate += -1;
+            document.getElementById("RightArrowBTN").style.backgroundColor = "white";
+            document.getElementById("LeftArrowBTN").style.backgroundColor = "red";
+        }
+        else if (RotateDir == "right") {
+            Rotate += 1;
+            document.getElementById("LeftArrowBTN").style.backgroundColor = "white";
+            document.getElementById("RightArrowBTN").style.backgroundColor = "red";
+        }
+        else {
+            document.getElementById("RightArrowBTN").style.backgroundColor = "white";
+            document.getElementById("LeftArrowBTN").style.backgroundColor = "white";
+            Rotate += 0;
+        }
+        BigBall.style.transform = "Rotate(" + Rotate + "deg)";
+    }, 10)
+    var SI1 = setInterval(MoveDownUpSmallBall, 10);
+    setInterval(LineRenderer, 10);
+    setInterval(BallsCollider, 10);
+    var SI3 = setInterval(SpawnBalls, SpawnDelay);
+    setInterval(function () {
+        SpawnDelay += 25;
+        if (SmallBallDownUpSpeed > 0) SmallBallDownUpSpeed += 0.02; else SmallBallDownUpSpeed -= 0.02;
+    }, 1000)
+    setInterval(AntiZeroBalls, 50)
+    SpawnBalls();
+    SpawnBalls();
+    SpawnBalls();
+</script>
+
+</html>
+
+<!-- 
+function hide(element, time, level) {
+    element.style.opacity = level - 0.1;
+    setTimeout(function () { if (element.style.opacity > 0) hide(element, time, level - 0.1); }
+        , time * 100);
+} -->
