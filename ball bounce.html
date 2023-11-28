@@ -1,0 +1,319 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            margin: 1%;
+            background-color: black;
+        }
+
+        .Main {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 90%;
+            outline: 1px solid black;
+            float: left;
+            border-bottom: 2px solid red;
+            border-top: 2px solid green;
+            background: rgb(137, 171, 182);
+        }
+
+        footer {
+            float: left;
+            width: 100%;
+            height: 10%;
+            background-color: rgb(2, 2, 58);
+            margin-top: 5px;
+            position: relative;
+        }
+
+        #Player {
+            width: 14%;
+            position: absolute;
+            bottom: 0%;
+            border: 5px solid green;
+            border-radius: 5px;
+        }
+
+        #CPU {
+            width: 14%;
+            position: absolute;
+            border: 5px solid lightcoral;
+            border-radius: 5px;
+        }
+
+        .tes {
+            width: 120%;
+            height: 10%;
+            background-color: green;
+        }
+
+        #ball {
+            position: relative;
+            font-size: 20;
+        }
+
+        #info {
+            text-align: center;
+            font-size: 300%;
+            color: white;
+
+        }
+
+        button {
+            position: relative;
+            display: inline-block;
+        }
+
+        #StartMenu {
+            width: 30%;
+            height: 30%;
+            background-color: silver;
+            position: relative;
+            left: 35%;
+            top: 20%;
+            overflow: auto;
+            border: 2px solid black;
+            border-radius: 10px;
+            display: none;
+        }
+
+        #StartMenu p {
+            position: relative;
+            margin: 3%;
+            top: 20%;
+
+        }
+
+        #StartMenu>p:nth-child(1)>button {
+            font-size: xx-large;
+            color: white;
+            background-color: rgb(3, 3, 75);
+            padding: 1%;
+
+        }
+
+        #StartMenu>p:nth-child(1)>button:hover {
+            box-shadow: 3px 5px 22px;
+            color: rgb(68, 202, 68);
+        }
+
+        #StartMenu>p:nth-child(2) button {
+            font-size: x-large;
+            margin: 1%;
+        }
+
+        #StartMenu>p:nth-child(2)>button:nth-child(2) {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<!--
+    made by mohammad
+    sina.shams@yahoo.com
+ -->
+
+<body>
+
+    <div class="Main">
+
+        <marquee id="mr" scrollamount="6" direction="down" width="100%" height="100%" behavior="alternate"
+            style="position:absolute;display:inline-block; text-shadow : 2px 2px 4px;">
+            <marquee style="font-size: 150%;color:red;" id="mr1" direction="left" scrollamount="9" behavior="alternate">
+
+            </marquee>
+        </marquee>
+        <div id="Player"></div>
+        <div id="CPU"></div>
+        <h3 class="Null" id="ball">🧿</h3>
+        <div id="StartMenu">
+            <p style="text-align:center"><button onclick='startgame()'>Start</button></p>
+            <p style="text-align:center">
+                <button id="level1" onclick="btn(this , 'green' , 1)">Easy</button>
+                <button id="level2" onclick="btn(this , 'yellow' , 2)">Medium</button>
+                <button id="level3" onclick="btn(this , 'red' , 3)">Hard</button>
+            </p>
+
+        </div>
+        <a id="res" href=""
+            style="background-color: lightgreen;border: 1px solid black;border-radius: 5px;padding:1%;font-size: xx-large;text-decoration: none;position: absolute;display: inline-block;left: 45%;top:40%;display:none;">Restart</a>
+        <p id="error" style="color:red;font-size:300%;position: absolute;left: 15%;top: 40%;">Error: something went
+            wrong in the javascript</p>
+    </div>
+
+    <footer>
+        <p id="info">Mobile Touchpad</p>
+    </footer>
+</body>
+
+<script>
+    var MouseX, MousePos = 0, MoveTop = 1, MoveLeft = 0, CEN, Bwall = true, Bplayers = true, level = 2, CPUspeed = 25;
+    main = document.getElementsByClassName("Main")[0];
+    main.addEventListener("mousemove", PlayerMove);
+    main.addEventListener("touchmove", PlayerMoveMobile);
+    main.addEventListener("touchstart", PlayerMoveMobile);
+    ball = document.getElementById("ball");
+    ball.style.top = 20;
+    ball.style.bottom = 0;
+    ball.style.left = main.offsetWidth / 2.1;
+    ball.style.right = 0;
+    document.getElementsByTagName("footer")[0].addEventListener("touchmove", PlayerMoveMobile);
+    document.getElementById("ball").style.fontSize = (main.offsetWidth / 4.869090909090909) + "%";
+    PW = document.getElementById("Player").offsetWidth;
+    CEN = (ConverPxToint(ball.style.left) - (MousePos - (PW / 4.020408163265306))).toFixed(0);
+    CPU = document.getElementById("CPU");
+    CPU.style.left = 0;
+    CEN1 = (ConverPxToint(ball.style.left) - (CPU.offsetWidth / 2.5).toFixed(0));
+    document.getElementById("StartMenu").style.display = "block";
+
+    //==============================================================================================================================
+
+    function btn(BTN, color, lvl) {
+        document.getElementById("level1").style.background = "white";
+        document.getElementById("level2").style.background = "white";
+        document.getElementById("level3").style.background = "white";
+        BTN.style.background = color;
+        level = lvl;
+    }
+    function ConverPxToint(par) {
+        let pos = "";
+        let p = par;
+        for (i = 0; i < p.length - 2; i++) {
+            pos += p[i];
+        }
+        pos = parseInt(pos);
+        return pos;
+    }
+    function PlayerMove(e) {
+        if (typeof (e.pageX) == "number") {
+            MousePos = e.pageX;
+        } else {
+            MousePos = e;
+        }
+        PW = document.getElementById("Player").offsetWidth;
+        MouseX = MousePos - (document.getElementById("Player").offsetWidth / 1.7);
+        if (MousePos > (main.offsetWidth / 100) * 5.974607916355489 && MousePos < (main.offsetWidth / 100) * 95.2203136669156) {
+            document.getElementById("Player").style.left = MouseX + "px";
+        }
+        // else {
+        //     if (MousePos < 100) {
+        //         document.getElementById("Player").style.left = 0 + "%";
+        //     }
+        //     else {
+        //         document.getElementById("Player").style.left = 85.2 + "%";
+
+        //     }
+        // }
+
+    }
+    function PlayerMoveMobile(e) {
+        PlayerMove(e.touches[0].clientX);
+    }
+    function MoveBall() {
+        let pos = ConverPxToint(ball.style.top);
+        let posL = ConverPxToint(ball.style.left);
+        if (posL <= 0 && Bwall === true || posL >= main.offsetWidth - ((main.offsetWidth / 100) * 2.5) && Bwall === true) {
+            Bwall = false;
+            MoveLeft = Math.round(MoveLeft * -1);
+            setTimeout(function () { Bwall = true; }, 100);
+        }
+        ball.style.top = (pos + MoveTop) + "px";
+        ball.style.left = (posL + MoveLeft) + "px";
+        if (pos > main.offsetHeight - ((main.offsetHeight / 100) * 3)) {
+            GameOver(1);
+        }
+        if (pos > main.offsetHeight - (main.offsetHeight / 100) * 5) {
+            if (CEN < main.offsetWidth / 11.849557522123893 && CEN > main.offsetWidth / -11.849557522123893 && Bplayers == true) {
+                MoveTop = - MoveTop;
+                MoveLeft = Math.round(CEN / 10);
+                Bplayers = false;
+                setTimeout(function () { Bplayers = true; }, 100);
+
+            }
+        }
+        if (ConverPxToint(ball.style.top) < ((main.offsetHeight / 100) * -2)) {
+            GameOver(0);
+        }
+        if (ConverPxToint(ball.style.top) < ((main.offsetHeight / 100) * 0.8)) {
+            if (CEN1 < main.offsetWidth / 11.849557522123893 && CEN1 > main.offsetWidth / -11.849557522123893 && Bplayers == true) {
+                MoveTop = - MoveTop;
+                MoveLeft = Math.round(CEN1 / 10);
+                Bplayers = false;
+                setTimeout(function () { Bplayers = true; }, 100);
+            }
+        }
+    }
+    function GameOver(Winner) {
+        clearInterval(z);
+        clearInterval(a);
+        clearInterval(r);
+        ball.remove();
+        document.getElementById("res").style.display = "inline";
+        if (Winner == 0) { document.getElementById("mr1").innerHTML = "You have won the game!"; } else { document.getElementById("mr1").innerHTML = "CPU has won the game!"; }
+        setInterval(function () {
+            if (document.getElementById("mr1").style.color == "red") {
+                document.getElementById("mr1").style.color = "blue";
+            }
+            else {
+                document.getElementById("mr1").style.color = "red";
+            }
+        }, 150)
+    }
+    function MoveCPU() {
+        let x = (ConverPxToint(CPU.style.left) - ConverPxToint(ball.style.left)) + (CPU.offsetWidth / 2.5); // center
+        let x2 = 0;
+        if (x > 0) {
+            x2 -= Math.round(main.offsetWidth / 150.16666666666666);
+        } else {
+            x2 += Math.round(main.offsetWidth / 150.16666666666666);
+        }
+        if (MoveTop < 0) { CPU.style.left = (ConverPxToint(CPU.style.left) + x2) + "px"; }
+    }
+    function startgame() {
+        switch (level) {
+            case (level = 1): {
+                CPUspeed = 15;
+                break;
+            }
+            case (level = 2): {
+                CPUspeed = 6;
+                break;
+            }
+            case (level = 3): {
+                CPUspeed = 1;
+                break;
+            }
+        }
+        z = setInterval(MoveBall, 1);
+        a = setInterval(function () {
+            CEN1 = ((ConverPxToint(ball.style.left) - ConverPxToint((CPU.style.left))) - CPU.offsetWidth / 2.6621621621621623).toFixed(0);
+            CEN = (ConverPxToint(ball.style.left) - (MousePos - (PW / 4.020408163265306))).toFixed(0);
+        }, 10)
+        r = setInterval(MoveCPU, CPUspeed);
+        document.getElementById("StartMenu").remove();
+        setInterval(function () {
+            if (MoveTop > 0) {
+                MoveTop++;
+            }
+            else {
+                MoveTop--;
+            }
+        }, 35000)
+
+
+    }
+
+    document.getElementById("error").style.display = "none";
+</script>
+
+</html>
