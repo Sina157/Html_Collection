@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0">
+    <title>My Custom Table</title>
+    <style>
+        * {
+            margin: auto;
+        }
+
+table{
+    table-layout: auto;
+}
+
+        th,
+        td {
+
+            width: 280px;
+            height: 50px;
+            padding: 20px;
+        }
+
+
+        td {
+            border: 1px solid rgb(1, 14, 29);
+            color: gray;
+        }
+
+        body {
+            background-color: rgb(1, 14, 29);
+        }
+
+        tr:nth-child(odd) {
+            background-color: rgb(0, 20, 43);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgb(0, 29, 61);
+        }
+
+        th {
+            color: rgb(49, 151, 185);
+            text-align: left;
+            background-color: rgb(1, 14, 29);
+        }
+
+        .first {
+            color: rgb(250, 73, 73);
+        }
+
+        tr:hover {
+            background-color: rgb(51, 48, 48);
+        }
+
+        td:hover {
+            cursor: pointer;
+            background-color: yellow;
+            color:black;
+            font-weight:bold;
+            box-shadow: -4px 3px rgb(75, 77, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <colgroup>
+            <col style="color: green;">
+        </colgroup>
+        <tr>
+            <th>Sites</th>
+            <th>Views</th>
+            <th>Clicks</th>
+            <th>Average</th>
+        </tr>
+        <tr>
+            <td class="first">Twitter</td>
+            <td>7534</td>
+            <td>10230</td>
+            <td>00:32:32</td>
+        </tr>
+        <tr>
+            <td class="first">Youtube</td>
+            <td>75343</td>
+            <td>102230</td>
+            <td>05:32:13</td>
+        </tr>
+        <tr>
+            <td class="first">Facebook</td>
+            <td>423</td>
+            <td>230</td>
+            <td>00:3:52</td>
+        </tr>
+        <tr>
+            <td class="first">Yahoo</td>
+            <td>734</td>
+            <td>1030</td>
+            <td>00:12:02</td>
+        </tr>
+        <tr>
+            <td class="first">Discord</td>
+            <td>3165</td>
+            <td>2342</td>
+            <td>00:25:12</td>
+        </tr>
+        <tr>
+            <td class="first">Bing</td>
+            <td>52142</td>
+            <td>231234</td>
+            <td>20:20:13</td>
+        </tr>
+    </table>
+</body>
+
+</html>
