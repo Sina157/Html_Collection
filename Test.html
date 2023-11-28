@@ -1,0 +1,157 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testy</title>
+</head>
+<style>
+    * {
+        direction: rtl;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body {
+        background-color: rgb(59, 59, 59);
+    }
+
+    #main {
+        margin: auto;
+        width: 90%;
+        background-color: rgb(1 ,4 ,38);
+        border-radius: 5px;
+        border: 1px solid whitesmoke;
+        color: white;
+        padding: 1vw;
+        margin-top: 2vw;
+        font-size: 2.5vw;
+        text-align: center;
+    }
+
+    input {
+        width: 20px;
+        height: 20px;
+    }
+
+    .Question {
+        color: aquamarine;
+        font-size: larger;
+    }
+
+    .Options {
+        margin: 2vw 1vw;
+        display: flex;
+        justify-items: baseline;
+        justify-content: space-evenly;
+    }
+
+    button {
+        border-radius: 5px;
+        font-size: large;
+        padding: 1vw;
+    }
+
+    button:hover {
+        border: 2px solid white;
+        font-weight: bolder;
+    }
+
+    button:active {
+        background-color: rosybrown;
+    }
+
+    label {
+        font-size: 2vw;
+    }
+
+    .test {
+        padding: 1px;
+    }
+</style>
+
+<body>
+    <div id="main">
+
+    </div>
+</body>
+<script>
+
+    var Questions = [
+        ["this is quest 1", "hello23232323322323", "test32323232322", "test323233", "test4322323323", 1],
+        ["this is quest 2", "test143", "test432", "test433", "test434", 3],
+        ["this is quest 3", "test123243", "test42332", "test43ds3", "test434sd", 4]
+    ]
+
+    const Main = document.getElementById("main");
+
+    function GetOptionsValue(NameOfOption) {
+        let radios = document.getElementsByName(NameOfOption);
+        for (let i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                return radios[i].value;
+            }
+        }
+        return null;
+    }
+
+    function EndTestEvent() {
+        this.remove();
+        let Radios = document.getElementsByTagName("input");
+        let Tests = document.getElementsByClassName("test");
+        let Options = document.getElementsByClassName("Options");
+        for (let i = 0; i < Options.length; i++) {
+            let Awnser = GetOptionsValue("Q" + i);
+            if (Awnser == Questions[i][5] && Awnser != null)
+                Tests[i].style.background = "darkgreen";
+            else
+                Tests[i].style.background = "darkred";
+            let result = document.createElement("p");
+            result.innerHTML=" گزینه "+ Questions[i][5] +" درست بود شما گزینه "+ Awnser +" را انتخاب کردید ";
+            if(Awnser == null) result.innerHTML = " جواب درست گزینه "+Questions[i][5]+" بود شما هیچ گزینه ای را انتخاب نکردید "
+            Tests[i].appendChild(result);
+            for (let i = 0; i < Radios.length; i++) {
+            Radios[i].setAttribute("disabled", "true");
+        }
+        }
+    }
+
+    for (let i = 0; i < Questions.length; i++) {
+        const element = Questions[i];
+        let NewTest = document.createElement("div");
+        NewTest.innerHTML = `
+            <p class="Question">`+ element[0] + `</p>
+            <div class="Options">
+                <div class="Option"> 
+                    <label>`+ element[1] + ` (1</label>
+                    <input type="radio" name="Q`+ i + `" value="1">
+                </div>
+                <div class="Option">
+                    <label>`+ element[2] + ` (2</label>
+                    <input type="radio" name="Q`+ i + `" value="2">
+                </div>
+                <div class="Option">
+                    <label>`+ element[3] + ` (3</label>
+                    <input type="radio" name="Q`+ i + `" value="3">
+                </div>
+                <div class="Option">
+                    <label>`+ element[4] + ` (4</label>
+                    <input type="radio" name="Q`+ i + `" value="4">
+                </div>
+            </div>`;
+        NewTest.setAttribute("class", "test")
+        document.getElementById("main").appendChild(NewTest);
+        if (i == Questions.length - 1) {
+            let Btn = document.createElement("button");
+            Btn.innerHTML = "پایان تست";
+            Btn.addEventListener("click", EndTestEvent);
+            Main.appendChild(Btn);
+        } else {
+            Main.appendChild(document.createElement("hr"));
+            Main.appendChild(document.createElement("br"));
+        }
+    }
+</script>
+
+</html>

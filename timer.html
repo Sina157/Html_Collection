@@ -1,0 +1,217 @@
+<html lang="en">
+<!-- made by sina -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button:hover {
+            background-color: red;
+        }
+
+        div {
+            background-color: silver;
+            border: 1px black solid;
+            width: 177px;
+        }
+
+        body {
+            background-color: lightblue;
+        }
+        pre {
+            background-color:rgb(47, 199, 204);
+            border: 1px solid black;
+            width: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 id="localtime"></h2>
+
+    <div>
+        <h1 id="timer">⏱️0:0:0</h1>
+        <button onclick="TimerS()">Start</button> <button onclick="StopT()">Stop</button> <button
+            onclick="Reset()">Reset</button>
+    </div>
+    <br>
+    <select onchange="evnt()" id="SelB">
+        <option value="1">Mode 1</option>
+        <option value="2">Mode 2</option>
+    </select>
+    <input type="Date">
+
+    <pre id="txt" style="font-size:25">
+Time left to this date:
+Years: 0
+Months: 0
+Weeks: 0
+Days: 0
+Hours: 0
+Minutes: 0
+Seconds: 0
+MiliSeconds: 0
+    </pre>
+
+</body>
+<script>
+day = new Date().getDay();
+switch(day)
+{
+    case (day = 0):
+    {
+        day = "Sunday"
+        break;
+    }
+    case (day = 1):
+    {
+        day = "Monday"
+        break;
+    }
+    case (day = 2):
+    {
+        day = "Tuesday"
+        break;
+    }
+    case (day = 3):
+    {
+        day = "Wednesday"
+        break;
+    }
+    case (day = 4):
+    {
+        day = "Thursday"
+        break;
+    }
+    case (day = 5):
+    {
+        day = "Friday"
+        break;
+    }
+    default:
+    {
+        day = "Saturday"
+        break;
+    }
+}
+
+    x = new Date().toLocaleTimeString();
+    document.getElementById("localtime").innerHTML = day+ "<br>   Local Time: " + x;
+    setInterval(localtime, 1000);
+    function localtime() {
+        x = new Date().toLocaleTimeString();
+        document.getElementById("localtime").innerHTML = day+ "<br>   Local Time: " + x;
+
+    }
+    ss = 0;
+    s = 0;
+    m = 0;
+
+    function Timer1() {
+        ss++;
+        if (ss == 100) {
+            s++;
+            ss = 0;
+        }
+        if (s == 60) {
+            m++;
+            s = 0;
+        }
+        document.getElementById("timer").innerHTML = "⏱️" + m + ":" + s + ":" + ss;
+    }
+    function TimerS() {
+        try {
+            clearInterval(xxx);
+            xxx = setInterval(Timer1, 10);
+        }
+        catch {
+            xxx = setInterval(Timer1, 10);
+        }
+    }
+
+    function StopT() {
+        try {
+            clearInterval(xxx);
+        }
+        catch { }
+    }
+    function Reset() {
+        document.getElementById("timer").innerHTML = "⏱️0:0:0";
+        s = 0;
+        ss = 0;
+        m = 0;
+    }
+    // __________________________________________________________________________________________________________________
+
+    input = document.querySelector("input");
+    input.value = localStorage.getItem("TimerValue157");
+    getmill((Date.parse(input.value) - Date.parse(Date()))); localStorage.setItem("TimerValue157", input.value);
+    input.addEventListener("change", function () { getmill((Date.parse(input.value) - Date.parse(Date()))); localStorage.setItem("TimerValue157", input.value) })
+    var x2 = Date.parse(input.value) - Date.parse(Date()) || Date.parse(localStorage.getItem("TimerValue157")) - Date.parse(Date());
+
+    function getmill(d) {
+        x2 = d;
+        try {
+            clearInterval(mm);
+        }
+        catch { }
+        mm = setInterval(function () { x2 = x2 - 10 }, 10)
+    }
+
+    function evnt() {
+        console.log(document.getElementById("SelB").value);
+    }
+    function core() {
+        // x2= Date.parse(input.value) - Date.parse(Date());
+        if (document.getElementById("SelB").value != 1) {
+            mil = x2;
+            seconds = (x2 / 1000);
+            minutes = (seconds / 60);
+            minutes = minutes.toFixed(2)
+            hours = (minutes / 60);
+            hours = hours.toFixed(2)
+            days = (hours / 24);
+            days = days.toFixed(3)
+            weeks = (days / 7);
+            weeks = weeks.toFixed(4)
+            months = (weeks / 4.351046698872786);
+            months = months.toFixed(5)
+            years = (months / 12);
+            years = years.toFixed(8)
+            document.getElementById("txt").innerHTML = "Time left to this date:\nYears: " + years + "\nMonths: " + months + "\nWeeks: " + weeks + "\nDays: " + days + "\nHours: " + hours + "\nMinutes: " + minutes + "\nSeconds: " + seconds + "\nMiliSeconds: " + mil
+        }
+        else {
+            seconds = (x2 / 1000);
+            minutes = (seconds / 60);
+            hours = (minutes / 60);
+            days = (hours / 24);
+            weeks = (days / 7);
+            months = (weeks / 4.351046698872786);
+            years = (months / 12);
+
+            months = (years % 1) * 12;
+            years = Math.trunc(years);
+            weeks = (months % 1) * 4.351046698872786;
+            months = Math.trunc(months);
+            days = (weeks % 1) * 7;
+            weeks = Math.trunc(weeks);
+            hours = (days % 1) * 24;
+            days = Math.trunc(days);
+            minutes = (hours % 1) * 60;
+            hours = Math.trunc(hours);
+            seconds = (minutes % 1) * 60;
+            minutes = Math.trunc(minutes);
+            mil = (seconds % 1) * 1000;
+            seconds = Math.trunc(seconds);
+            mil = Math.trunc(mil);
+
+            document.getElementById("txt").innerHTML = "Time left to this date:\nYears: " + years + "\nMonths: " + months + "\nWeeks: " + weeks + "\nDays: " + days + "\nHours: " + hours + "\nMinutes: " + minutes + "\nSeconds: " + seconds + "\nMiliSeconds: " + mil
+        }
+        
+    }
+    //   const unixTimeZero = Date.parse('01 Jan 1970 00:00:00 GMT'); // return zero
+    setInterval(core, 10);
+</script>
+
+</html>

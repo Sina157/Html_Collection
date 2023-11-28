@@ -1,0 +1,866 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            user-select: none;
+        }
+
+        #ShapesMenu {
+            width: 20%;
+            height: 95%;
+            margin: 1% 0.5%;
+            overflow: auto;
+            background-color: aqua;
+            position: sticky;
+            top: 0;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        body {
+            background: linear-gradient(silver, blue);
+        }
+
+        #ShapesMenu>h2 {
+            text-align: center;
+            font-size: 4vw;
+        }
+
+        #ShapesMenu>div {
+            position: relative;
+            background-color: rgb(243, 236, 236);
+            border: 1px solid black;
+            margin: auto;
+            font-size: 1.7vw;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            justify-items: center;
+            flex-flow: nowrap;
+            margin: auto;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #Rectangle {
+            width: 14vw;
+            height: 6vw;
+            top: 2%;
+        }
+
+        #Parallelogram {
+            width: 14vw;
+            height: 6vw;
+            top: 4%;
+            transform: skew(-20deg);
+        }
+
+        #circle {
+            width: 10vw;
+            height: 10vw;
+            top: 6%;
+            border-radius: 1000px;
+        }
+
+        #Diamond {
+            width: 10vw;
+            height: 10vw;
+            top: 12%;
+            transform: rotate(45deg);
+        }
+
+        #Parallelogram>div {
+            width: 83%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            justify-items: center;
+            flex-flow: nowrap;
+            margin: auto;
+            flex-direction: column;
+            transform: skew(20deg);
+            text-align: center;
+            overflow: auto;
+        }
+
+        #Diamond>div {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            justify-items: center;
+            flex-flow: nowrap;
+            margin: auto;
+            flex-direction: column;
+            transform: rotate(-45deg);
+            text-align: center;
+            overflow: auto;
+        }
+
+        #SizeUp {
+            width: 20%;
+            cursor: pointer;
+            float: right;
+        }
+
+        #SizeDown {
+            cursor: pointer;
+            float: left;
+            width: 20%;
+        }
+
+        #SizeUp:active {
+            background-color: red;
+        }
+
+        #SizeDown:active {
+            background-color: red;
+        }
+
+        #ShowHideMenu {
+            position: sticky;
+            top: 0;
+            float: left;
+            color: white;
+            border: 1px solid black;
+            background-color: red;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #SaveBtn {
+            cursor: pointer;
+            margin: auto;
+            font-size: 1.5vw;
+        }
+    </style>
+</head>
+
+<body>
+    <p style="font-size: xx-small;opacity: 0.1;">.</p>
+    <svg id="SVG"></svg>
+    <div value="show" id="ShowHideMenu">
+        <div>≺≺≺</div>
+        <div>≺≺≺</div>
+        <div>≺≺≺</div>
+        <div>≺≺≺</div>
+    </div>
+
+    <div id="ShapesMenu">
+        <div id="SizeUp">➕</div>
+        <div id="SizeDown">➖</div>
+        <p style="text-align: center;">
+            <button onclick="SaveFile()" id="SaveBtn">Save The File</button>
+        </p>
+        <h2>Shaps</h2>
+        <div id="Rectangle"></div>
+        <div id="Parallelogram">
+            <div></div>
+        </div>
+        <div id="Circle"></div>
+        <div id="Diamond">
+            <div></div>
+        </div>
+    </div>
+    <div style="font-size: 1px;">.</div>
+    <div style="margin-top: 200%; font-size: 1px;position: relative;left: 50%">.</div>
+</body>
+<script>
+    const colors = ["rgb(255, 255, 0)","rgb(47, 99, 34)","rgb(9, 255, 0)","rgb(223, 65, 196)","rgb(255, 166, 0)","rgb(64, 64, 65)", "rgb(82, 2, 2)", "rgb(124, 85, 0)", "rgb(105, 124, 0)", "rgb(23, 94, 2)", "rgb(0, 110, 46)", "rgb(0, 106, 110)", "rgb(0, 24, 68)", "rgb(0, 3, 255)", "rgb(76, 4, 134)", "rgb(104, 0, 90)", "rgb(104, 0, 26)", "rgb(0, 0, 0)"];
+    var dotsID = 0, creatingE, TouchMoveing = false, TouchPos = [0, 0], cursor_x, cursor_y, FollowMouse, Track, Track2, ExtraSize = 0, ExtraFontSize = 0, LineFollowMouse, DrawingDot, NewJoin;
+    var ListOfDots = [];
+    document.getElementById("ShowHideMenu").addEventListener("click", function () {
+        if (this.getAttribute("value") == "show") {
+            this.innerHTML = "<div>≻≻≻</div><div>≻≻≻</div><div>≻≻≻</div><div>≻≻≻</div>";
+            this.style.backgroundColor = "green";
+            this.setAttribute("value", "hide");
+            document.getElementById("ShapesMenu").style.display = "none";
+        } else {
+            this.innerHTML = "<div>≺≺≺</div><div>≺≺≺</div><div>≺≺≺</div><div>≺≺≺</div>";
+            this.setAttribute("value", "show");
+            this.style.backgroundColor = "red";
+            document.getElementById("ShapesMenu").style.display = "block";
+        }
+    });
+    document.onmousemove = function (event) {
+        cursor_x = event.pageX;
+        cursor_y = event.pageY;
+    }
+    document.getElementById("SizeUp").addEventListener("click", function () {
+        ExtraFontSize += 0.1;
+        ExtraSize += 1;
+    });
+    document.getElementById("SizeDown").addEventListener("click", function () {
+        ExtraFontSize -= 0.1;
+        ExtraSize -= 1;
+    });
+    function SetDefaultStyle(element) {
+        element.style.backgroundColor = "rgb(243, 236, 236)";
+        element.style.position = "absolute";
+        element.style.border = "1px solid black";
+        element.setAttribute("class", "Shapes");
+        element.style.userSelect = "none";
+        element.style.display = "flex";
+        element.style.justifyItems = "center";
+        element.style.justifyContent = "center";
+        element.style.textAlign = "center";
+        element.style.flexDirection = "column";
+        element.style.overflow = "auto";
+        element.style.fontSize = (1.7 + ExtraFontSize) + "vw";
+        element.style.flexWrap = "nowrap";
+        element.setAttribute("contenteditable", "true");
+        let DelDiv = document.createElement("div");
+        DelDiv.innerHTML = '❌';
+        DelDiv.style.display = "none";
+        DelDiv.style.position = "absolute";
+        DelDiv.style.fontSize = "1.7vw";
+        DelDiv.style.backgroundColor = "white";
+        DelDiv.style.border = "2px solid black";
+        DelDiv.setAttribute("class", "icons");
+        DelDiv.style.userSelect = "none";
+        DelDiv.style.cursor = "pointer";
+
+        let UpDiv = document.createElement("div");
+        UpDiv.innerHTML = '➕';
+        UpDiv.style.position = "absolute";
+        UpDiv.style.fontSize = "1.7vw";
+        UpDiv.style.backgroundColor = "white";
+        UpDiv.style.border = "2px solid black";
+        UpDiv.setAttribute("class", "icons");
+        UpDiv.style.userSelect = "none";
+        UpDiv.style.display = "none";
+        UpDiv.style.cursor = "pointer";
+
+        let DownDiv = document.createElement("div");
+        DownDiv.innerHTML = '➖';
+        DownDiv.style.position = "absolute";
+        DownDiv.style.display = "none";
+        DownDiv.style.fontSize = "1.7vw";
+        DownDiv.style.backgroundColor = "white";
+        DownDiv.style.border = "2px solid black";
+        DownDiv.setAttribute("class", "icons");
+        DownDiv.style.userSelect = "none";
+        DownDiv.style.cursor = "pointer";
+        let dot1 = CreateJoinDot();
+        let dot2 = CreateJoinDot();
+        document.body.appendChild(DownDiv);
+        document.body.appendChild(UpDiv);
+        document.body.appendChild(DelDiv);
+        document.body.appendChild(dot1);
+        document.body.appendChild(dot2);
+        if (element.getAttribute("shapetype") == "Diamond") {
+            var dot3 = CreateJoinDot();
+            document.body.appendChild(dot3);
+            var dot4 = CreateJoinDot();
+            document.body.appendChild(dot4);
+        }
+        DelDiv.addEventListener("click", function () {
+            let icons = document.getElementsByClassName("icons");
+            for (let i = 0; i < icons.length; i++)
+                if (icons[i].style.display != "none") icons[i].remove();
+            icons = document.getElementsByClassName("icons");
+            for (let i = 0; i < icons.length; i++)
+                if (icons[i].style.display != "none") icons[i].remove();
+            if (element.getAttribute("shapetype") == "Diamond") {
+                dot3.style.display = "none";
+                dot4.style.display = "none";
+                dot3.remove();
+                dot4.remove();
+            }
+            dot1.style.display = "none";
+            dot2.style.display = "none";
+            dot1.remove();
+            dot2.remove();
+            element.remove();
+            SetLines();
+        });
+        UpDiv.addEventListener("click", function () {
+            if (element.getAttribute("shapetype") == "Rectangle" || element.getAttribute("shapetype") == "Parallelogram") {
+                element.style.width = (parseInt(element.style.width) + 1) + "vw";
+                element.style.height = (parseFloat(element.style.height) + 0.5) + "vw";
+            } else {
+                element.style.width = (parseInt(element.style.width) + 1) + "vw";
+                element.style.height = (parseInt(element.style.height) + 1) + "vw";
+            }
+            element.style.fontSize = (parseFloat(element.style.fontSize) + 0.15) + "vw";
+        });
+        DownDiv.addEventListener("click", function () {
+            if (element.getAttribute("shapetype") == "Rectangle" || element.getAttribute("shapetype") == "Parallelogram") {
+                element.style.width = (parseInt(element.style.width) - 1) + "vw";
+                element.style.height = (parseFloat(element.style.height) - 0.5) + "vw";
+            } else {
+                element.style.width = (parseInt(element.style.width) - 1) + "vw";
+                element.style.height = (parseInt(element.style.height) - 1) + "vw";
+            }
+            element.style.fontSize = (parseFloat(element.style.fontSize) - 0.15) + "vw";
+        });
+        element.addEventListener("touchstart", function () {
+            HideIcons();
+            element.dispatchEvent(new Event('mouseup'))
+            TouchMoveing = true;
+            Track = setTimeout(function () {
+                FollowMouse = setInterval(function () {
+                    SetLines();
+                    let pos = TouchPos;
+                    element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                    element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+                    if (element.getAttribute("shapetype") == "Rectangle" || element.getAttribute("shapetype") == "Parallelogram") {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 3.2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 3.7;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.01;
+                        dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                    } else if (element.getAttribute("shapetype") == "Diamond") {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        dot1.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) * 1.23;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                        dot2.style.left = parseFloat(element.style.left) - parseInt(element.clientWidth) / 2.55;
+                        dot3.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.23;
+                        dot3.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                        dot4.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 2.5;
+                        dot4.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                    } else {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 5;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.02;
+                        dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                    }
+                }, 10);
+            }, 100);
+        });
+        element.addEventListener("drag", function () {
+            clearInterval(FollowMouse);
+            clearTimeout(Track);
+        });
+
+        element.addEventListener("mouseup", function () {
+            HideIcons();
+            element.setAttribute("contenteditable", "true");
+            clearTimeout(Track2);
+            Track2 = setTimeout(HideIcons, 5000);
+            let pos = GetMousePos();
+            if (DelDiv.getAttribute("FirstTime") != "No") {
+                if (element.getAttribute("shapetype") == "Rectangle" || element.getAttribute("shapetype") == "Parallelogram") {
+                    DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                    DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                    UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 3.2;
+                    DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 3.7;
+                    dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                    dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.01;
+                    dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                } else if (element.getAttribute("shapetype") == "Diamond") {
+                    DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                    DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                    UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                    DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                    dot1.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                    dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) * 1.23;
+                    dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                    dot2.style.left = parseFloat(element.style.left) - parseInt(element.clientWidth) / 2.55;
+                    dot3.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.23;
+                    dot3.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                    dot4.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 2.5;
+                    dot4.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                } else {
+                    DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                    DelDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                    UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                    UpDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                    DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                    DownDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                    dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 5;
+                    dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                    dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.02;
+                    dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                }
+            }
+            DelDiv.setAttribute("FirstTime", "No");
+            UpDiv.setAttribute("FirstTime", "No");
+            DownDiv.setAttribute("FirstTime", "No");
+            DelDiv.style.display = "inline-block";
+            UpDiv.style.display = "inline-block";
+            DownDiv.style.display = "inline-block";
+            dotsID++;
+        });
+        element.addEventListener("mousedown", function () {
+            HideIcons();
+            Track = setTimeout(function () {
+                FollowMouse = setInterval(function () {
+                    SetLines();
+                    element.setAttribute("contenteditable", "false");
+                    let pos = GetMousePos();
+                    element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                    element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+                    if (element.getAttribute("shapetype") == "Rectangle" || element.getAttribute("shapetype") == "Parallelogram") {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 3.2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 3.7;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.01;
+                        dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.4;
+                    } else if (element.getAttribute("shapetype") == "Diamond") {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight) * 1.2;
+                        dot1.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) * 1.23;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) / 2.4;
+                        dot2.style.left = parseFloat(element.style.left) - parseInt(element.clientWidth) / 2.55;
+                        dot3.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.23;
+                        dot3.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                        dot4.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 2.5;
+                        dot4.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.42;
+                    } else {
+                        DelDiv.style.left = pos[0] - parseInt(element.clientWidth) / 1.5;
+                        DelDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        UpDiv.style.left = pos[0] - parseInt(element.clientWidth) / 11;
+                        UpDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        DownDiv.style.left = pos[0] + parseInt(element.clientWidth) / 2;
+                        DownDiv.style.top = pos[1] - parseInt(element.clientHeight);
+                        dot1.style.top = parseFloat(element.style.top) - parseInt(element.clientHeight) / 5;
+                        dot1.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                        dot2.style.top = parseFloat(element.style.top) + parseInt(element.clientHeight) * 1.02;
+                        dot2.style.left = parseFloat(element.style.left) + parseInt(element.clientWidth) / 2.5;
+                    }
+                }, 10);
+            }, 100);
+        });
+        element.addEventListener("drag", function () {
+            clearInterval(FollowMouse);
+            clearTimeout(Track);
+        });
+    }
+    function CreateRectangle() {
+        let element = document.createElement("div");
+        document.body.appendChild(element);
+        SetDefaultStyle(element);
+        element.setAttribute("shapetype", "Rectangle");
+        element.style.width = (14 + ExtraSize) + "vw";
+        element.style.height = (7 + ExtraSize / 2) + "vw";
+        return element;
+    }
+    function CreateParallelogram() {
+        let element = document.createElement("div");
+        SetDefaultStyle(element);
+        element.setAttribute("shapetype", "Parallelogram");
+        let innerElement = document.createElement("div");
+        innerElement.style.transform = "skew(20deg)";
+        innerElement.style.width = "83%";
+        innerElement.style.height = "90%";
+        innerElement.style.display = "flex";
+        innerElement.style.justifyItems = "center";
+        innerElement.style.justifyContent = "center";
+        innerElement.style.textAlign = "center";
+        innerElement.style.flexDirection = "column";
+        innerElement.style.overflow = "auto";
+        innerElement.style.fontSize = (1.7 + ExtraFontSize) + "vw";
+        innerElement.style.flexWrap = "nowrap";
+        innerElement.setAttribute("contenteditable", "true");
+        innerElement.style.margin = "auto";
+        element.appendChild(innerElement);
+        element.style.width = (14 + ExtraSize) + "vw";
+        element.style.height = (7 + ExtraSize / 2) + "vw";
+        element.removeAttribute("contenteditable");
+        element.style.transform = "skew(-20deg)";
+        document.body.appendChild(element);
+        return element;
+    }
+    function CreateDiamond() {
+        let element = document.createElement("div");
+        element.setAttribute("shapetype", "Diamond");
+        SetDefaultStyle(element);
+        let innerElement = document.createElement("div");
+        innerElement.style.transform = "Rotate(45deg)";
+        innerElement.style.width = "70%";
+        innerElement.style.height = "70%";
+        innerElement.style.display = "flex";
+        innerElement.style.justifyItems = "center";
+        innerElement.style.justifyContent = "center";
+        innerElement.style.textAlign = "center";
+        innerElement.style.flexDirection = "column";
+        innerElement.style.overflow = "auto";
+        innerElement.style.fontSize = (1.7 + ExtraFontSize) + "vw";
+        innerElement.style.flexWrap = "nowrap";
+        innerElement.setAttribute("contenteditable", "true");
+        innerElement.style.margin = "auto";
+        element.appendChild(innerElement);
+        element.style.width = (10 + ExtraSize) + "vw";
+        element.removeAttribute("contenteditable");
+        element.style.height = (10 + ExtraSize) + "vw";
+        element.style.transform = "Rotate(-45deg)";
+        document.body.appendChild(element);
+        return element;
+    }
+    function CreateCircle() {
+        let element = document.createElement("div");
+        element.setAttribute("shapetype", "Circle");
+        SetDefaultStyle(element);
+        element.style.width = (10 + ExtraSize) + "vw";
+        element.style.height = (10 + ExtraSize) + "vw";
+        element.style.fontSize = "2.3vw"
+        element.style.fontWeight = "bloder";
+        element.style.borderRadius = "1000px";
+        document.body.appendChild(element);
+        return element;
+    }
+    document.addEventListener("touchmove", function (e) {
+        if (TouchMoveing) {
+            e.preventDefault();
+            TouchPos = [e.touches[0].clientX, e.touches[0].clientY];
+        }
+    }, { passive: false });
+    document.getElementById("Diamond").addEventListener("touchend", function () {
+        creatingE.dispatchEvent(new Event('mouseup'))
+    });
+    document.getElementById("Rectangle").addEventListener("touchend", function () {
+        creatingE.dispatchEvent(new Event('mouseup'))
+    });
+    document.getElementById("Parallelogram").addEventListener("touchend", function () {
+        creatingE.dispatchEvent(new Event('mouseup'))
+    });
+    document.getElementById("Circle").addEventListener("touchend", function () {
+        creatingE.dispatchEvent(new Event('mouseup'))
+        document.getElementById("Circle").addEventListener("touchstart", function (e) {
+            let element = CreateCircle();
+            creatingE = element;
+            TouchMoveing = true;
+            FollowMouse = setInterval(function () {
+                let pos = TouchPos;
+                element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+                element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+            }, 10)
+        });
+    });
+    document.getElementById("Parallelogram").addEventListener("touchstart", function () {
+        let element = CreateParallelogram();
+        TouchMoveing = true;
+        creatingE = element;
+        FollowMouse = setInterval(function () {
+            let pos = TouchPos;
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Diamond").addEventListener("touchstart", function () {
+        let element = CreateDiamond();
+        creatingE = element;
+        TouchMoveing = true;
+        FollowMouse = setInterval(function () {
+            let pos = TouchPos;
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Rectangle").addEventListener("touchstart", function () {
+        let element = CreateRectangle();
+        TouchMoveing = true;
+        creatingE = element;
+        FollowMouse = setInterval(function () {
+            let pos = TouchPos;
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Circle").addEventListener("mousedown", function (e) {
+        let pos = GetMousePos();
+        let element = CreateCircle();
+        FollowMouse = setInterval(function () {
+            pos = GetMousePos();
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Parallelogram").addEventListener("mousedown", function () {
+        let pos = GetMousePos();
+        let element = CreateParallelogram();
+        FollowMouse = setInterval(function () {
+            pos = GetMousePos();
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Diamond").addEventListener("mousedown", function () {
+        let pos = GetMousePos();
+        let element = CreateDiamond();
+        FollowMouse = setInterval(function () {
+            pos = GetMousePos();
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+    document.getElementById("Rectangle").addEventListener("mousedown", function () {
+        let pos = GetMousePos();
+        let element = CreateRectangle();
+        FollowMouse = setInterval(function () {
+            pos = GetMousePos();
+            element.style.left = pos[0] - parseInt(element.clientWidth) / 2;
+            element.style.top = pos[1] - parseInt(element.clientHeight) / 2;
+        }, 10)
+    });
+
+    document.addEventListener("touchend", function () {
+        clearInterval(FollowMouse);
+        clearTimeout(Track);
+        TouchMoveing = false;
+        setTimeout(() => {
+            if (NewJoin != true && DrawingDot != null) {
+                try { DrawingDot[1].remove(); } catch { console.log("Error"); }
+            }
+            NewJoin = false;
+            DrawingDot = null;
+        }, 50);
+    });
+    document.addEventListener("mouseup", function () {
+        clearInterval(FollowMouse);
+        clearTimeout(Track);
+        clearInterval(LineFollowMouse);
+        setTimeout(() => {
+            if (NewJoin != true && DrawingDot != null) {
+                try { DrawingDot[1].remove(); } catch { console.log("Error"); }
+            }
+            NewJoin = false;
+            DrawingDot = null;
+        }, 50);
+    });
+
+    function GetMousePos() {
+        return [cursor_x, cursor_y];
+    }
+    function HideIcons() {
+        let icons = document.getElementsByClassName("icons");
+        for (let i = 0; i < icons.length; i++) {
+            icons[i].style.display = "none";
+        }
+    }
+    function CreateJoinDot() {
+        let dis;
+        let ele = document.createElement("div");
+        ele.addEventListener("dblclick", () => { ele.style.display = "none"; });
+        ele.style.width = (2 + ExtraFontSize) + "vw";
+        ele.style.height = (2 + ExtraFontSize) + "vw";
+        ele.style.borderRadius = "500px";
+        ele.style.backgroundColor = "rgb(0, 0, 0)";
+        ele.style.position = "absolute";
+        ele.setAttribute("class", "DOTS");
+        ele.setAttribute("dotid", dotsID);
+        ele.addEventListener("touchstart", function () {
+            let line = document.createElementNS("http://www.w3.org/2000/svg", 'polyline');
+            DrawingDot = [ele, line];
+            line.style.stroke = "black";
+            line.style.fill = "none";
+            line.style.strokeWidth = "0.5vw";
+            document.getElementById("SVG").appendChild(line);
+            line.addEventListener("dblclick", () => { line.style.display = "none"; line.remove(); });
+            TouchMoveing = true;
+            LineFollowMouse = setInterval(function () {
+                line.setAttribute("points",
+                    (parseFloat(ele.style.left) + ele.clientWidth / 2.2) + "," + (parseFloat(ele.style.top) - ele.clientTop / 2) + " " + TouchPos[0] + "," + TouchPos[1] / 1.025
+                );
+            }, 100);
+        });
+        ele.addEventListener("touchend", function () {
+            let dots = document.getElementsByClassName("DOTS");
+            let res = 9999;
+            let selectedDot = "null";
+            if (DrawingDot[0] != null)
+                for (let i = 0; i < dots.length; i++) {
+                    if (dots[i] == DrawingDot[0] || dots[i].getAttribute("dotid") == DrawingDot[0].getAttribute("dotid")) continue;
+                    let testE = document.createElement("div");
+                    testE.style.left = TouchPos[0];
+                    testE.style.top = TouchPos[1];
+                    testE.style.width = "1px";
+                    testE.style.height = "1px";
+                    dis = getDistanceBetweenElements(testE, dots[i]);
+                    if (res > dis) {
+                        res = dis;
+                        selectedDot = dots[i];
+                    }
+                    testE.remove();
+                }
+            clearInterval(LineFollowMouse);
+            if (dis < 250 && selectedDot != "null") {
+                NewJoin = true;
+                ListOfDots.push([DrawingDot[0], selectedDot, DrawingDot[1]]);
+                SetLines();
+            } else {
+                NewJoin = false;
+                DrawingDot[1].remove();
+                clearInterval(LineFollowMouse);
+            }
+        });
+        document.addEventListener("touchend", function () {
+            clearInterval(LineFollowMouse);
+        });
+        ele.addEventListener("mousedown", function () {
+            let line = document.createElementNS("http://www.w3.org/2000/svg", 'polyline');
+            let RndInt = Math.floor(Math.random() * (colors.length - 0)) + 0;
+            DrawingDot = [ele, line];
+            line.style.stroke = colors[RndInt];
+            line.style.fill = "none";
+            line.style.strokeWidth = "0.5vw";
+            document.getElementById("SVG").appendChild(line);
+            line.addEventListener("dblclick", () => { line.style.display = "none"; line.remove(); });
+            LineFollowMouse = setInterval(function () {
+                line.setAttribute("points",
+                    (parseFloat(ele.style.left) + ele.clientWidth / 2.2) + "," + (parseFloat(ele.style.top) - ele.clientTop / 2) + " " + GetMousePos()[0] + "," + GetMousePos()[1] / 1.025
+                );
+            }, 100);
+        });
+        ele.addEventListener("mouseup", function () {
+            if (DrawingDot[0] != ele) {
+                clearInterval(LineFollowMouse);
+                NewJoin = true;
+                ListOfDots.push([DrawingDot[0], ele, DrawingDot[1]]);
+                SetLines();
+            }
+        });
+        return ele;
+    }
+    function SetLines() {
+        for (let i = 0; i < ListOfDots.length; i++) {
+            if (ListOfDots[i][2].style.display == "none") {
+                ListOfDots.splice(i, 1);
+                continue;
+            }
+            if (ListOfDots[i][0].style.display == "none" || ListOfDots[i][1].style.display == "none") {
+                ListOfDots[i][2].style.display = "none";
+                ListOfDots[i][2].remove();
+            }
+            ListOfDots[i][2].setAttribute("points",
+                (parseFloat(ListOfDots[i][0].style.left) + ListOfDots[i][0].clientWidth / 2.2) + "," + (parseFloat(ListOfDots[i][0].style.top) - ListOfDots[i][0].clientTop / 2) +
+                " " + (parseFloat(ListOfDots[i][1].style.left) + ListOfDots[i][1].clientWidth / 2.2) + "," + parseFloat(ListOfDots[i][1].style.top)
+            );
+        }
+    }
+    setInterval(() => {
+        document.getElementById("SVG").style.width = document.body.offsetWidth + document.body.scrollLeft;
+    }, 1000);
+    document.getElementById("SVG").style.height = document.body.offsetHeight;
+
+
+    function getDistanceBetweenElements(a, b) {
+        let aLeft = parseInt(a.style.left);
+        let aTop = parseInt(a.style.top);
+        let bLeft = parseInt(b.style.left);
+        let bTop = parseInt(b.style.top);
+
+        let dis1 = Math.abs(aLeft - bLeft);
+        let dis2 = Math.abs(aTop - bTop);
+        return dis1 + dis2;
+    }
+
+    (function (a, b) { if ("function" == typeof define && define.amd) define([], b); else if ("undefined" != typeof exports) b(); else { b(), a.FileSaver = { exports: {} }.exports } })(this, function () { "use strict"; function b(a, b) { return "undefined" == typeof b ? b = { autoBom: !1 } : "object" != typeof b && (console.warn("Deprecated: Expected third argument to be a object"), b = { autoBom: !b }), b.autoBom && /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type) ? new Blob(["\uFEFF", a], { type: a.type }) : a } function c(a, b, c) { var d = new XMLHttpRequest; d.open("GET", a), d.responseType = "blob", d.onload = function () { g(d.response, b, c) }, d.onerror = function () { console.error("could not download file") }, d.send() } function d(a) { var b = new XMLHttpRequest; b.open("HEAD", a, !1); try { b.send() } catch (a) { } return 200 <= b.status && 299 >= b.status } function e(a) { try { a.dispatchEvent(new MouseEvent("click")) } catch (c) { var b = document.createEvent("MouseEvents"); b.initMouseEvent("click", !0, !0, window, 0, 0, 0, 80, 20, !1, !1, !1, !1, 0, null), a.dispatchEvent(b) } } var f = "object" == typeof window && window.window === window ? window : "object" == typeof self && self.self === self ? self : "object" == typeof global && global.global === global ? global : void 0, a = /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent), g = f.saveAs || ("object" != typeof window || window !== f ? function () { } : "download" in HTMLAnchorElement.prototype && !a ? function (b, g, h) { var i = f.URL || f.webkitURL, j = document.createElement("a"); g = g || b.name || "download", j.download = g, j.rel = "noopener", "string" == typeof b ? (j.href = b, j.origin === location.origin ? e(j) : d(j.href) ? c(b, g, h) : e(j, j.target = "_blank")) : (j.href = i.createObjectURL(b), setTimeout(function () { i.revokeObjectURL(j.href) }, 4E4), setTimeout(function () { e(j) }, 0)) } : "msSaveOrOpenBlob" in navigator ? function (f, g, h) { if (g = g || f.name || "download", "string" != typeof f) navigator.msSaveOrOpenBlob(b(f, h), g); else if (d(f)) c(f, g, h); else { var i = document.createElement("a"); i.href = f, i.target = "_blank", setTimeout(function () { e(i) }) } } : function (b, d, e, g) { if (g = g || open("", "_blank"), g && (g.document.title = g.document.body.innerText = "downloading..."), "string" == typeof b) return c(b, d, e); var h = "application/octet-stream" === b.type, i = /constructor/i.test(f.HTMLElement) || f.safari, j = /CriOS\/[\d]+/.test(navigator.userAgent); if ((j || h && i || a) && "undefined" != typeof FileReader) { var k = new FileReader; k.onloadend = function () { var a = k.result; a = j ? a : a.replace(/^data:[^;]*;/, "data:attachment/file;"), g ? g.location.href = a : location = a, g = null }, k.readAsDataURL(b) } else { var l = f.URL || f.webkitURL, m = l.createObjectURL(b); g ? g.location = m : location.href = m, g = null, setTimeout(function () { l.revokeObjectURL(m) }, 4E4) } }); f.saveAs = g.saveAs = g, "undefined" != typeof module && (module.exports = g) });
+
+
+    function SaveFile() {
+        var blob = new Blob([document.documentElement.innerHTML],
+            { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "FlowChart.html");
+
+    }
+    setTimeout(() => {
+        let OldShapes = document.getElementsByClassName("Shapes");
+        let Dots = document.getElementsByClassName("DOTS");
+        let lines = document.getElementsByTagName("polyline");
+        let len = Dots.length;
+        let DelList = [];
+        let len2 = lines.length;
+        for (let i = 0; i < len; i++) {
+            Dots[0].remove()
+        }
+        for (let i = 0; i < OldShapes.length; i++) {
+            SetDefaultStyle(OldShapes[i]);
+            OldShapes[i].dispatchEvent(new Event('mouseup'));
+        }
+        for (let i = 0; i < len2; i++) {
+            if (lines[i].style.display == "none") {
+                DelList.push(lines[i]);
+                continue;
+            }
+            lines[i].addEventListener("dblclick", () => { lines[i].style.display = "none" });
+            let linePos = lines[i].getAttribute("points").split(' ');
+            let dots = document.getElementsByClassName("DOTS");
+            let res = 9999;
+            let selectedDot = "null";
+            for (let i = 0; i < dots.length; i++) {
+                let testE = document.createElement("div");
+                testE.style.left = linePos[0].split(',')[0];
+                testE.style.top = linePos[0].split(',')[1];
+                testE.style.width = "1px";
+                testE.style.height = "1px";
+                dis = getDistanceBetweenElements(testE, dots[i]);
+                if (res > dis) {
+                    res = dis;
+                    selectedDot = dots[i];
+                }
+                testE.remove();
+            }
+            let res1 = 9999;
+            let selectedDot1 = "null";
+            for (let i = 0; i < dots.length; i++) {
+                let testE = document.createElement("div");
+                testE.style.left = linePos[1].split(',')[0];
+                testE.style.top = linePos[1].split(',')[1];
+                testE.style.width = "1px";
+                testE.style.height = "1px";
+                dis = getDistanceBetweenElements(testE, dots[i]);
+                if (res1 > dis) {
+                    res1 = dis;
+                    selectedDot1 = dots[i];
+                }
+                testE.remove();
+            }
+            NewJoin = true;
+            ListOfDots.push([selectedDot, selectedDot1, lines[i]]);
+        }
+        len = DelList.length;
+        for (let i = 0; i < len; i++) {
+            DelList[i].remove();
+        }
+        SetLines();
+    }, 100);
+</script>
+
+</html>

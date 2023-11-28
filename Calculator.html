@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button {
+            font-size: 20;
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border: 1px solid;
+        }
+
+        button:hover {
+
+            outline: 2px solid lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input id="input" type="text" placeholder="Write your calculation here"> <br> <br>
+        <button onclick="document.getElementById('input').value += '1'">1</button>
+        <button onclick="document.getElementById('input').value += '2'">2</button>
+        <button onclick="document.getElementById('input').value += '3'">3</button>
+        <button onclick="document.getElementById('input').value += '+'">+</button><br>
+        <button onclick="document.getElementById('input').value += '4'">4</button>
+        <button onclick="document.getElementById('input').value += '5'">5</button>
+        <button onclick="document.getElementById('input').value += '6'">6</button>
+        <button onclick="document.getElementById('input').value += '-'">-</button><br>
+        <button onclick="document.getElementById('input').value += '7'">7</button>
+        <button onclick="document.getElementById('input').value += '8'">8</button>
+        <button onclick="document.getElementById('input').value += '9'">9</button>
+        <button onclick="document.getElementById('input').value += '*'">*</button><br>
+        <button onclick="document.getElementById('input').value = ''">c</button>
+        <button onclick="document.getElementById('input').value += '0'">0</button>
+        <button onclick="document.getElementById('input').value += '.'">.</button>
+        <button onclick="document.getElementById('input').value += '/'">/</button><br>
+        <button onclick="document.getElementById('input').value += '('">(</button>
+        <button onclick="document.getElementById('input').value += ')'">)</button>
+        <button
+            onclick="document.getElementById('input').value  = fact(document.getElementById('input').value)">d</button>
+        <button
+            onclick="try {document.getElementById('input').value = eval(document.getElementById('input').value)}catch(e){alert(e)}">=</button>
+
+
+    </div>
+</body>
+<script>
+    document.getElementById('input').addEventListener('keyup', function (key) { if (key.keyCode == 13) { try { document.getElementById('input').value = eval(document.getElementById('input').value) } catch (e) { alert(e) }; } })
+    function fact(Num) {
+        var d = "";
+         for (i = 0; i <= Num.length - 2; i++) {
+             d = d + Num[i];   
+         }
+        return d;
+    }
+</script>
+
+</html>
