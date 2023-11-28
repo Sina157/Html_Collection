@@ -1,0 +1,325 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess Numbers</title>
+    <style>
+        
+        body {
+            background-color: rgb(51, 44, 44);
+        }
+
+        #Dlvl {
+            position: absolute;
+            background-color: gray;
+            margin: auto;
+            left:500px;
+        }
+
+        #Area {
+            position: absolute;
+            margin: auto;
+            top: 250px;
+
+        }
+
+        #Btn {
+            font-size: 40;
+            font-style: oblique;
+            border: 5px groove green;
+            position: absolute;
+            top: 330px;
+            width: 150px;
+        }
+
+        .BTool {
+            font-size: large;
+            position: relative;
+            left:470px;
+            margin-bottom: 10px;
+            top:400px;
+            border: 2px solid
+        }
+
+        button:hover {
+            background-color: red;
+
+        }
+
+        .blocks {
+            font-size: 40;
+            width: 60px;
+        }
+
+        #ToolBox {
+            position: relative;
+            margin-left: auto;
+        }
+
+        #info {
+            position: absolute;
+            margin: auto;
+            font-size: x-large;
+            top: 600px;
+        }
+
+        #res {
+            position: absolute;
+            width: 390px;
+            height: 100px;
+            top: 90px;
+            left: 350px;
+            border: 20px groove;
+            display: none;
+        }
+
+        .Pbtn {
+            position: absolute;
+            font-size: medium;
+            left: 30px;
+        }
+
+        .Pbtn:hover {
+            background-color: greenyellow;
+            font-style: oblique;
+        }
+
+        #RN {
+            top: 25px;
+        }
+
+        #FG {
+            top: 55px;
+        }
+
+        #RTH {
+            top: 85px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="background-color:rgb(58, 119, 58); width:200px;height: 140px;position: absolute;">
+        <pre style="position: relative;margin: auto; color:white;left :60px;font-size: medium;"> Help Menu</pre>
+        <button onclick="RN();this.style.display='none';" id="RN" class="Pbtn">Reveal a number</button>
+        <button onclick="FG();this.style.display='none';" id="FG" class="Pbtn">Free Guess</button>
+        <button onclick="RTH();this.style.display='none';" id="RTH" class="Pbtn">Revert this round!</button>
+        <button onclick="Iall()" class="BTool">Increase all numbers</button>
+        <button onclick="Dall()" class="BTool">Decrease all numbers</button>
+        <button onclick="Sall()" class="BTool">Smart Change</button>
+        <button id="Btn">Start</button>
+    </div>
+    <h2 id="Dlvl"></h2>
+    <div id="ToolBox">
+
+    </div>
+    <div id="Area">
+    </div>
+    
+    <div>
+        <pre id="Info"> <span style="color:red"><b>Red</b></span> means the number is higher than your number.
+ <span style="color:blue"><b>Blue</b></span> means the number is lower than your number.
+    </pre>
+    </div>
+    <div id="res">
+        <pre id="rtxt"></pre>
+    </div>
+    
+
+</body>
+<script>
+    var LP ;
+    LL = 10;
+    document.getElementById("Info").style.marginLeft = 300 + "px";
+    document.getElementById("Info").style.bottom = "100px";
+    level = 1;
+    life = 10;
+    document.getElementById("Dlvl").innerHTML = "Level : " + level;
+    tb = document.getElementById("ToolBox");
+    tb.style.height = window.innerHeight / 1.1;
+    tb.style.width = "70px";
+    tb.style.backgroundColor = "silver";
+    spawncount = 5;
+    Leftpos = 410;
+    document.getElementById("Area").style.left = Leftpos + "px";
+    document.getElementById("Btn").style.left = 500 + "px";
+    document.getElementById("Btn").addEventListener("click", Core1)
+    function Core1()
+    {
+        if (this.innerHTML == "Start" || this.innerHTML == "Next" || this.innerHTML == "Restart"|| this.innerHTML == "Revert") {
+            if (level > 13) {
+                alert("Well Done!You are very smart!")
+            }
+            else {
+                LL = life;
+                LP = Leftpos;
+                document.getElementById("res").style.display = "none";
+                this.innerHTML = "Guess";
+                document.getElementById("Dlvl").innerHTML = "Level : " + level;
+                nextLevel();
+                tb.innerHTML = "";
+                for (n = 0; n < life; n++) {
+                    let x = document.createElement("p")
+                    x.setAttribute("class", "hearts")
+                    x.innerHTML = "🖤"
+                    tb.appendChild(x);
+                }
+                setTimeout(newblock, 50);
+            }
+        }
+        else {
+            list1 = document.getElementsByClassName("blocks");
+            let redo = 0;
+            for (let i = 0; i < list1.length; i++) {
+                if (list1[i].Num == list1[i].value) {
+                    list1[i].style.backgroundColor = "green";
+                    list1[i].style.color = "black";
+                    list1[i].setAttribute("disabled", "true");
+                }
+                else {
+                    redo = 1;
+                    if (list1[i].Num > list1[i].value) {
+                        list1[i].style.backgroundColor = "red";
+                    }
+                    else {
+                        list1[i].style.backgroundColor = "blue";
+                    }
+                }
+            }
+            if (redo == 1) {
+                life--;
+                let x = document.getElementsByClassName("hearts");
+                x[0].remove();
+                if (life <= 0) {
+                    let x = document.getElementById("res");
+                    x.style.display = "inline";
+                    x.style.backgroundColor = "rgb(219, 92, 92)";
+                    x.style.borderColor = "darkred";
+                    document.getElementById("rtxt").innerHTML = "  Game Over";
+                    document.getElementById("rtxt").style.fontSize = "30";
+                    document.getElementById("rtxt").style.paddingLeft = "85px";
+                    document.getElementById("Btn").innerHTML = "Restart"
+                    spawncount = 5;
+                    level = 1;
+                    life = 10;
+                    Leftpos = 410;
+                }
+            }
+            else {
+                let x = document.getElementById("res");
+                x.style.display = "inline";
+                x.style.backgroundColor = "lightgreen";
+                x.style.borderColor = "darkgreen";
+                let i = Math.floor(Math.random() * 4)
+                msg = ["   Bravo!", "  Good Job!", "    Nice!!", "You are smart!"]
+                document.getElementById("rtxt").innerHTML = msg[i];
+                document.getElementById("rtxt").style.fontSize = "30";
+                document.getElementById("rtxt").style.paddingLeft = "85px";
+                life += 3;
+                for (let c = 0; c < 3; c++) {
+                    let x = document.createElement("p");
+                    x.setAttribute("class", "hearts");
+                    x.innerHTML = "🖤";
+                    tb.appendChild(x);
+                }
+                document.getElementById("Btn").innerHTML = "Next";
+                level++;
+            }
+        }
+    }
+    function newblock() {
+        for (i = 0; i < spawncount; i++) {
+            let x = document.createElement("input");
+            x.setAttribute("Class", "blocks");
+            x.type = "number";
+            x.min = 0;
+            x.max = 9;
+            x.Num = Math.floor(Math.random() * 10);
+            x.style.position = "relative";
+            x.defaultValue = 0;
+            x.setAttribute("type", "Number");
+            Leftpos = Leftpos - 2.5;
+            x.style.position = "relative";
+            document.getElementById("Area").style.left = Leftpos + "px";
+            document.getElementById("Area").appendChild(x);
+
+        }
+    }
+
+    function nextLevel() {
+        let b = document.getElementsByClassName("blocks");
+        let c = b.length
+        for (let i = 0; i < c; i++) {
+            document.getElementById("Area").removeChild(b[0]);
+        }
+        spawncount++;
+    }
+
+    function Iall() {
+        let b = document.getElementsByClassName("blocks");
+        for (let i = 0; i < b.length; i++) {
+            if (b[i].value < 9 && b[i].style.backgroundColor != "green") {
+                b[i].value++;
+            }
+        }
+    }
+    function Dall() {
+        let b = document.getElementsByClassName("blocks");
+        for (let i = 0; i < b.length; i++) {
+            if (b[i].value > 0 && b[i].style.backgroundColor != "green") {
+                b[i].value--;
+            }
+        }
+    }
+    function RN() {
+        let b = document.getElementsByClassName("blocks");
+        for (let i = 0; i < b.length; i++) {
+            if (b[i].style.backgroundColor != "green") {
+                b[i].style.backgroundColor = "green";
+                b[i].value = b[i].Num;
+                b[i].style.color = "black";
+                b[i].setAttribute("disabled", "true");
+                break;
+            }
+        }
+    }
+    function FG() {
+        let b = document.getElementsByClassName("blocks");
+        for (let i = 0; i < b.length; i++) {
+            if (b[i].style.backgroundColor != "green")
+            {
+            if (b[i].Num > b[i].value) {
+                b[i].style.backgroundColor = "red";
+            }
+            else {
+                b[i].style.backgroundColor = "blue";
+            }
+        }
+    }
+}
+function Sall(){
+    let b = document.getElementsByClassName("blocks");
+        for (let i = 0; i < b.length; i++) {
+            if (b[i].style.backgroundColor == "red" && b[i].value < 9)
+            {
+                b[i].value++;
+            }
+            else if (b[i].style.backgroundColor == "blue"&& b[i].value > 0) {
+                b[i].value--;
+            }
+        }
+}
+    function RTH() {
+document.getElementById("Btn").innerHTML = "Revert";
+life = LL;
+Leftpos = LP;
+spawncount--;
+Core1();
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissor</title>
+    <style>
+        * {
+            position: absolute;
+        }
+
+        .PB {
+            font-size: larger;
+            border: 2px solid;
+        }
+
+        .CB {
+            border: 2px solid;
+            background-color: white;
+        }
+
+        .PB:hover {
+            font-style: oblique;
+        }
+    </style>
+
+</head>
+
+<body style="background-color:silver;">
+
+    <marquee id="showtime" style="font-size:large;font-style: italic;" behavior="alternate" scrollamount="1" vspace="4"
+        width="1300px" direction="left">
+        Javascript Error</marquee>
+    <h1 style="left: 625px;bottom:0px;position: relative;">CPU</h1>
+    <button class="CB" id="R" disabled style="font-size:larger;left: 750px;top: 70px;">Rock</button>
+    <button class="CB" id="P" disabled style="font-size:larger;left: 635px;top: 70px;">Paper</button>
+    <button class="CB" id="S" disabled style="font-size:larger;left: 510px;top: 70px;">Scissor</button>
+
+    <div
+        style="background-color:lightseagreen;width:350px;height:350px;left: 460px;top:110px;border: groove blue 30px;border-radius: 50px;">
+        <h2 id = "Score0" style="left:30px;">YOU : 0</h2>
+        <h1  style="left:150px;font-style: italic;top: -6px;color: white;">VS</h1>
+        <h2 id = "Score1" style="left:230px;">CPU : 0</h2>
+        <h2 id="showpmove" style="top:250px;left:70px"></h2>
+        <h2 id="showcmove" style="top:290px;left:70px"></h2>
+        <div style="width: 350px;height:100px;top: 80px;">
+            <pre id="Info" style="font-size:50px;left: 50px;"></pre>
+        </div>
+    </div>
+    <button onmouseleave="resetB()" onmouseover="changebc(this)" class="PB"
+        style="left: 750px;top: 535px;">Rock</button>
+    <button onmouseleave="resetB()" onmouseover="changebc(this)" class="PB"
+        style="left: 635px;top: 535px;">Paper</button>
+    <button onmouseleave="resetB()" onmouseover="changebc(this)" class="PB"
+        style="left: 510px;top: 535px;">Scissor</button>
+    <h1 style="left: 625px;top:550px;">YOU</h1>
+</body>
+<script>
+    score = [0, 0]
+    var Pchose;
+    var acts = ["Rock", "Paper", "Scissor"]
+    function changebc(Btn) {
+        if (Btn.style.backgroundColor != "red") {
+            Btn.style.backgroundColor = "rgb(190, 119, 125)"
+        }
+    }
+    document.getElementById("showtime").innerHTML = Date();
+    xx = document.querySelectorAll('.PB');
+    xx1 = document.querySelectorAll('.CB');
+    for (i = 0; i < xx.length; i++) {
+        xx[i].addEventListener("click", Core);
+    }
+    function resetB() {
+        for (i = 0; i < xx.length; i++) {
+            if (xx[i] != Pchose) {
+                xx[i].style.backgroundColor = "white";
+            }
+        }
+    }
+    function reCB() {
+        for (i = 0; i < xx1.length; i++) {
+
+            xx1[i].style.backgroundColor = "white";
+
+        }
+    }
+    setInterval(function () { document.getElementById("showtime").innerHTML = Date(); }, 1000);
+    function Core(x) {
+        Pchose = x.target;
+        resetB();
+        Pchose.style.backgroundColor = "red";
+        CPUmove = Math.floor(Math.random() * 3);
+        document.getElementById("showcmove").innerHTML = "CPU move was: " + acts[CPUmove];
+        document.getElementById("showpmove").innerHTML = "Your move was: " + Pchose.innerHTML;
+        Pmove = Pchose.innerHTML
+        Cmove = acts[CPUmove]
+
+        switch (Cmove) {
+            case (Cmove = "Rock"): {
+                reCB();;
+                document.getElementById("R").style.backgroundColor = "red";
+                break;
+
+            }
+            case (Cmove = "Paper"): {
+                reCB();
+                document.getElementById("P").style.backgroundColor = "red";
+                break;
+
+            }
+            case (Cmove = "Scissor"): {
+                reCB();
+                document.getElementById("S").style.backgroundColor = "red";
+                break;
+
+            }
+        }
+        switch (Pmove) {
+
+            case (Pmove = Cmove):
+                {
+                    document.getElementById("Info").innerHTML = "It's Tie!";
+                    document.getElementById("Info").style.color = "yellow";
+                    break;
+                }
+            case (Pmove = "Rock"):
+                {
+                    if (Cmove == "Paper") {
+                        document.getElementById("Info").innerHTML = " CPU Won!";
+                        document.getElementById("Info").style.color = "red";
+                        score[1]++;
+                    }
+                    else {
+                        document.getElementById("Info").innerHTML = " You Won!";
+                        document.getElementById("Info").style.color = "green";
+                        score[0]++;
+                    }
+
+                    break;
+                }
+
+            case (Pmove = "Paper"):
+                {
+                    if (Cmove == "Scissor") {
+                        document.getElementById("Info").innerHTML = " CPU Won!";
+                        document.getElementById("Info").style.color = "red";
+                        score[1]++;
+                    }
+                    else {
+                        document.getElementById("Info").innerHTML = " You Won!";
+                        document.getElementById("Info").style.color = "green";
+                        score[0]++;
+                    }
+
+                    break;
+                }
+            case (Pmove = "Scissor"):
+                {
+                    if (Cmove == "Rock") {
+                        document.getElementById("Info").innerHTML = " CPU Won!";
+                        document.getElementById("Info").style.color = "red";
+                        score[1]++;
+                    }
+                    else {
+                        document.getElementById("Info").innerHTML = " You Won!";
+                        document.getElementById("Info").style.color = "green";
+                        score[0]++;
+                    }
+
+                    break;
+                }
+
+        }
+document.getElementById("Score0").innerHTML = "YOU : "+score[0];
+document.getElementById("Score1").innerHTML = "CPU : "+score[1];
+    }
+</script>
+
+</html>
